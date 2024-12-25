@@ -1,7 +1,7 @@
 {
-  "name": "codemirror-lang-EXAMPLE",
+  "name": "codemirror-lang-kcl",
   "version": "0.1.0",
-  "description": "EXAMPLE language support for CodeMirror",
+  "description": "KCL language support for CodeMirror 6",
   "scripts": {
     "test": "mocha test/test.js",
     "prepare": "rollup -c"

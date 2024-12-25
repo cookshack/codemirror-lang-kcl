@@ -1,41 +1,62 @@
 # Booleans
 
-#t
-#f
+true
+false
 
 ==>
 
-Program(Boolean, Boolean)
+Program(ExpressionStatement(true), ExpressionStatement(false))
 
 # Identifiers
 
 one
-Two_Three
+_Two_Three
+Four5
 
 ==>
 
-Program(Identifier, Identifier)
+Program(ExpressionStatement(VariableName),
+        ExpressionStatement(VariableName),
+        ExpressionStatement(VariableName))
 
 # Strings
 
 "hello"
+'hi'
 "one\"\\two"
+'3\'\\four\x'
 
 ==>
 
-Program(String, String)
+Program(ExpressionStatement(String),
+        ExpressionStatement(String),
+        ExpressionStatement(String),
+        ExpressionStatement(String))
 
-# Applications
+# VariableDeclaration
 
-(begin
-  (when #t
-    (print (concat "hello" " " "world")))
-  (print "DONE"))
+let a = 'abc'
+export const x = 0.2
+
 
 ==>
 
-Program(Application(
-  Identifier,
-  Application(Identifier, Boolean, Application(
-    Identifier, Application(Identifier, String, String, String)))
-  Application(Identifier, String)))
+Program(VariableDeclaration(let, VariableDefinition, Equals, String),
+        VariableDeclaration(export, const, VariableDefinition, Equals, Number))
+
+# IfExpression
+
+if x { 1 } else { $tag }
+
+==>
+
+Program(ExpressionStatement(IfExpression(if, VariableName, Body(ExpressionStatement(Number)), else, Body(ExpressionStatement(TagDeclarator)))))
+
+
+# Shebang
+
+#!anything
+
+==>
+
+Program(Shebang)

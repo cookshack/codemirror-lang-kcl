@@ -1,30 +1,42 @@
-import {parser} from "./syntax.grammar"
-import {LRLanguage, LanguageSupport, indentNodeProp, foldNodeProp, foldInside, delimitedIndent} from "@codemirror/language"
-import {styleTags, tags as t} from "@lezer/highlight"
+// Code mirror language implementation for KCL.
 
-export const EXAMPLELanguage = LRLanguage.define({
+import {
+  LRLanguage,
+  LanguageSupport,
+  indentNodeProp,
+  continuedIndent,
+  delimitedIndent,
+  foldNodeProp,
+  foldInside,
+} from '@codemirror/language'
+// @ts-ignore: No types available
+import { parser } from './syntax.grammar'
+
+export const KclLanguage = LRLanguage.define({
+  name: 'kcl',
   parser: parser.configure({
     props: [
       indentNodeProp.add({
-        Application: delimitedIndent({closing: ")", align: false})
+        Body: delimitedIndent({ closing: '}' }),
+        BlockComment: () => null,
+        'Statement Property': continuedIndent({ except: /^{/ }),
       }),
       foldNodeProp.add({
-        Application: foldInside
+        'Body ArrayExpression ObjectExpression': foldInside,
+        BlockComment(tree) {
+          return { from: tree.from + 2, to: tree.to - 2 }
+        },
+        PipeExpression(tree) {
+          return { from: tree.firstChild!.to, to: tree.to }
+        },
       }),
-      styleTags({
-        Identifier: t.variableName,
-        Boolean: t.bool,
-        String: t.string,
-        LineComment: t.lineComment,
-        "( )": t.paren
-      })
-    ]
+    ],
   }),
   languageData: {
-    commentTokens: {line: ";"}
-  }
+    commentTokens: { line: '//', block: { open: '/*', close: '*/' } },
+  },
 })
 
-export function EXAMPLE() {
-  return new LanguageSupport(EXAMPLELanguage)
+export function kcl() {
+  return new LanguageSupport(KclLanguage)
 }
