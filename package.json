@@ -1,5 +1,5 @@
 {
-  "name": "codemirror-lang-kcl",
+  "name": "@kittycad/codemirror-lang-kcl",
   "version": "0.1.0",
   "description": "KCL language support for CodeMirror 6",
   "scripts": {
